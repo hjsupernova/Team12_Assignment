@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 @MainActor
 class ContentViewModel: ObservableObject {
+    
     // 이메일
     @Published var email = ""
     @Published var isVaildEmail = false
@@ -30,36 +32,25 @@ class ContentViewModel: ObservableObject {
     var isButtonDisabled: Bool {
         !isVaildEmail || !(password.count >= 2)
     }
-    @Published var showingAlert = false
-    @Published var alertTitle = ""
-    @Published var alertMessage = ""
     
     //MARK: - 함수
     func isValidEmailAddr(string: String) -> Bool {
         return string.wholeMatch(of: /[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}/) != nil
     }
     
-    func login() {
-        if email == "ohtt@apple.com" && password == "happyswift1!" {
-            
-            alertTitle = "로그인 성공"
-            alertMessage = "환영합니다"
-            showingAlert  = true
-            
-        } else {
-            alertTitle = "로그인 실패"
-            alertMessage = "아이디 혹은 비밀번호가 맞지 않습니다."
-            showingAlert  = true
-        }
-}
+    func login() throws {
 
+        guard email == "ohtt@apple.com" && password == "happyswift1!" else {
+            throw LoginError.wrongIdOrPassword(message: "아이디 혹은 비밀번호가 맞지 않습니다.", title: "로그인 실패")
+        }
+        UIApplication.shared.open(URL(string: "https://www.notion.so/12-9277e1deca8f4be9849cfe4f4d3defea")!)
+    }
+}
 
 //MARK: - 에러
-enum PasswordError: Error {
-    case TooShort
-    
-}
+
 
 enum LoginError: Error {
-    case wrongIdOrPassword(message: String)
+    case wrongIdOrPassword(message: String, title: String)
 }
+

@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     
-    #warning("로그인 에러로 핸들. 비밀번호 토글")
+#warning(" 비밀번호 토글")
     
     @StateObject private var contentViewModel = ContentViewModel()
-
+    @State private var showingAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
     var body: some View {
         
         NavigationView {
@@ -32,7 +34,7 @@ struct ContentView: View {
                                 contentViewModel.isVaildEmail =  contentViewModel.isValidEmailAddr(string: contentViewModel.email)
                             }
                             .textFieldStyle(.roundedBorder)
-
+                        
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
                         
@@ -47,10 +49,10 @@ struct ContentView: View {
                         Text("비밀번호")
                         SecureField("비밀번호를 입력해주세요", text: $contentViewModel.password)
                             .textFieldStyle(.roundedBorder)
-                            
+                        
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled()
-                            
+                        
                         HStack {
                             StatusBar(password: $contentViewModel.password)
                         }
@@ -62,7 +64,15 @@ struct ContentView: View {
                     // 로그인 버튼
                     VStack(alignment: .center) {
                         Button() {
-                            contentViewModel.login()
+                            do {
+                                try contentViewModel.login()
+                            } catch LoginError.wrongIdOrPassword(let message, let title) {
+                                alertTitle = title
+                                alertMessage = message
+                                showingAlert = true
+                            } catch {
+                                
+                            }
                         } label: {
                             Text("로그인")
                                 .frame(maxWidth: .infinity)
@@ -74,20 +84,20 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                .alert((contentViewModel.alertTitle), isPresented: $contentViewModel.showingAlert) {
+                .alert((alertTitle), isPresented: $showingAlert) {
                 } message: {
-                    Text(contentViewModel.alertMessage)
+                    Text(alertMessage)
                 }
             }
             .navigationTitle("Hello World!")
             .background(Color(cgColor: CGColor(red: 206, green: 220, blue: 252, alpha: 0)))
-                            
+            
         }
     }
     
     
-
-
+    
+    
 }
 
 
