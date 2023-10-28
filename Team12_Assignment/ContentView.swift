@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-#warning(" 비밀번호 토글")
-    
+        
     @StateObject private var contentViewModel = ContentViewModel()
     @State private var showingAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
+    @State private var isSecured = true
     var body: some View {
         
         NavigationView {
             ZStack {
+                // 배경 색
                 Color(cgColor: CGColor(red: 206/255, green: 220/255, blue: 252/255, alpha: 1))
                 
                     .ignoresSafeArea()
@@ -47,15 +47,54 @@ struct ContentView: View {
                     VStack(alignment: .leading ) {
                         
                         Text("비밀번호")
-                        SecureField("비밀번호를 입력해주세요", text: $contentViewModel.password)
-                            .textFieldStyle(.roundedBorder)
                         
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
+                        if isSecured {
+                            ZStack {
+                                SecureField("비밀번호를 입력해주세요", text: $contentViewModel.password)
+                                    .textFieldStyle(.roundedBorder)
+                                
+                                    .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
+                                
+                                HStack {
+                                    Spacer()
+                                    Button() {
+                                        isSecured.toggle()
+                                    } label: {
+                                        Image(systemName: "eye.slash")
+                                            .foregroundStyle(.black)
+                                    }
+                                    
+                                }
+                                .padding(.horizontal)
+                                
+                            }
+                        } else {
+                            ZStack {
+                                TextField("비밀번호를 입력해주세요", text: $contentViewModel.password)
+                                    .textFieldStyle(.roundedBorder)
+                                
+                                    .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
+                                
+                                HStack {
+                                    Spacer()
+                                    Button() {
+                                        isSecured.toggle()
+                                    } label: {
+                                        Image(systemName: "eye")
+                                            .foregroundStyle(.black)
+                                    }
+                                }
+                                .padding(.horizontal)
+                                
+                            }
+                        }
                         
                         HStack {
                             StatusBar(password: $contentViewModel.password)
                         }
+                        .padding(.vertical)
                         
                         Text(contentViewModel.helperTextForPassword)
                         
