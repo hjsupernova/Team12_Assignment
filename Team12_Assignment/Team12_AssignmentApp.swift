@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Team12_AssignmentApp: App {
+struct Team12AssignmentApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
