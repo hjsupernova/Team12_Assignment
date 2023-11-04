@@ -24,8 +24,8 @@ struct ContentView: View {
                     VStack(alignment: .leading) {
                         Text("이메일")
                         TextField("이메일을 입력해주세요", text: $contentViewModel.email)
-                            .onChange(of: contentViewModel.email) { newValue in
-                                contentViewModel.isVaildEmail =  contentViewModel.isValidEmailAddr(string: contentViewModel.email)
+                            .onChange(of: contentViewModel.email) { email in
+                                contentViewModel.isValidEmailAddr(string: email)
                             }
                             .textFieldStyle(.roundedBorder)
                             .textInputAutocapitalization(.never)

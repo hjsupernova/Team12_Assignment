@@ -29,10 +29,17 @@ class ContentViewModel: ObservableObject {
     var isButtonDisabled: Bool {
         !isVaildEmail || !(password.count >= 2)
     }
-    
-    //MARK: - 함수
-    func isValidEmailAddr(string: String) -> Bool {
-        return string.wholeMatch(of: /[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}/) != nil
+}
+
+// MARK: - 함수
+
+extension ContentViewModel {
+    func isValidEmailAddr(string: String) {
+        if string.wholeMatch(of: /[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}/) == nil {
+            isVaildEmail = false
+        } else {
+            isVaildEmail = true
+        }
     }
     func login() throws {
         guard email == "ohtt@apple.com" && password == "happyswift1!" else {
