@@ -9,9 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var contentViewModel = ContentViewModel()
-    @State private var showingAlert = false
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
     @State private var isSecured = true
     var body: some View {
         NavigationView {
@@ -80,15 +77,7 @@ struct ContentView: View {
                     // 로그인 버튼
                     VStack(alignment: .center) {
                         Button {
-                            do {
-                                try contentViewModel.login()
-                            } catch LoginError.wrongIdOrPassword(let message, let title) {
-                                alertTitle = title
-                                alertMessage = message
-                                showingAlert = true
-                            } catch {
-                                // catch error
-                            }
+                            contentViewModel.login()
                         } label: {
                             Text("로그인")
                                 .frame(maxWidth: .infinity)
@@ -99,9 +88,9 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                .alert(alertTitle, isPresented: $showingAlert) {
+                .alert(contentViewModel.alertTitle, isPresented: $contentViewModel.showingAlert) {
                 } message: {
-                    Text(alertMessage)
+                    Text(contentViewModel.alertMessage)
                 }
             }
             .navigationTitle("Hello World!")
