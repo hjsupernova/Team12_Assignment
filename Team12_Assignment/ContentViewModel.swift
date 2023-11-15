@@ -43,6 +43,7 @@ extension ContentViewModel {
             isVaildEmail = false
         } else {
             isVaildEmail = true
+            print("hello")
         }
     }
     func login() {
